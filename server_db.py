@@ -408,6 +408,11 @@ class SurveyHandler(http.server.SimpleHTTPRequestHandler):
 
         if path == "/" or path == "/survey":
             self.serve_file("templates/survey.html", "text/html; charset=utf-8")
+        elif path == "/health":
+            self.send_response(200)
+            self.send_header("Content-Type", "text/plain")
+            self.end_headers()
+            self.wfile.write(b"OK")
         elif path == "/admin":
             self.serve_admin()
         elif path.startswith("/data/"):

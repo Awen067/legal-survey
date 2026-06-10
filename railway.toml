@@ -3,11 +3,5 @@ builder = "nixpacks"
 
 [deploy]
 startCommand = "python3 server_db.py"
-healthcheckPath = "/"
-healthcheckTimeout = 30
-
-[[deploy.volumes]]
-source = "surveys_data"
-destination = "/data"
-
-[environments.production]
+healthcheckPath = "/health"
+healthcheckTimeout = 60
