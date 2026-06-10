@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业用工法律风险体检</title>
+    <style>
+        :root {
+            --primary: #1a3c6d;
+            --primary-light: #2c5aa0;
+            --accent: #3a7bd5;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #e0e4e8;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #e67e22;
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 60%, var(--accent) 100%);
+            color: white;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(26, 60, 109, 0.3);
+        }
+        .header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-title .icon { font-size: 28px; }
+
+        /* Progress */
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            height: 8px;
+            width: 300px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            transition: width 0.4s ease;
+        }
+        .progress-text {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 20px 60px;
+        }
+
+        /* Step Navigation */
+        .step-nav {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .step-dot {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid var(--border);
+            color: var(--text-light);
+            background: white;
+            flex-shrink: 0;
+        }
+        .step-dot.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+        .step-dot.done {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+        .step-label {
+            display: none;
+            position: absolute;
+            font-size: 10px;
+            white-space: nowrap;
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            top: -24px;
+        }
+        .step-dot:hover .step-label { display: block; }
+        .step-dot { position: relative; }
+
+        /* Card */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+            padding: 32px;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            font-size: 22px;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .card .mod-desc {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        /* Company Info Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+            outline: none;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--accent);
+        }
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        /* Question */
+        .question-item {
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            animation: fadeIn 0.3s ease;
+        }
+        .question-item:last-child { border-bottom: none; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .question-num {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 26px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .question-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        .question-text .multi-badge {
+            display: inline-block;
+            background: #e8f4fd;
+            color: var(--accent);
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 6px;
+            font-weight: 500;
+        }
+
+        /* Options */
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .option-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            color: var(--text);
+        }
+        .option-item:hover {
+            border-color: var(--accent);
+            background: #f0f6ff;
+        }
+        .option-item.selected {
+            border-color: var(--primary);
+            background: #e8f0fa;
+            color: var(--primary);
+            font-weight: 500;
+        }
+        .option-item input {
+            display: none;
+        }
+        .option-indicator {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-radius: 3px;
+            margin-right: 10px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .radio-indicator { border-radius: 50%; }
+        .checkbox-indicator { border-radius: 3px; }
+        .option-item.selected .radio-indicator {
+            border-color: var(--primary);
+            background: var(--primary);
+            box-shadow: inset 0 0 0 3px white;
+        }
+        .option-item.selected .checkbox-indicator {
+            border-color: var(--primary);
+            background: var(--primary);
+        }
+        .option-item.selected .checkbox-indicator::after {
+            content: "✓";
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* Buttons */
+        .btn-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        .btn-prev {
+            background: #f0f2f5;
+            color: var(--text-light);
+        }
+        .btn-prev:hover { background: #e0e4e8; }
+        .btn-next {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+        .btn-next:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(26, 60, 109, 0.3); }
+        .btn-submit {
+            background: linear-gradient(135deg, var(--success), #219a52);
+            color: white;
+            font-size: 16px;
+            padding: 16px 48px;
+        }
+        .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(39, 174, 96, 0.4); }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Success Page */
+        .success-page {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        .success-page h1 {
+            font-size: 28px;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+        .success-page p {
+            font-size: 16px;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            padding: 40px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .modal .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .modal h3 { margin-bottom: 8px; color: var(--primary); }
+        .modal p { color: var(--text-light); font-size: 14px; }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .card { padding: 20px; }
+            .header-inner { flex-direction: column; gap: 8px; }
+            .progress-bar { width: 100%; }
+            .btn { padding: 12px 20px; font-size: 14px; }
+        }
+
+        .required-star { color: var(--danger); margin-left: 2px; }
+    </style>
+</head>
+<body>
+    <div class="app-header">
+        <div class="header-inner">
+            <div class="header-title">
+                <span class="icon">⚖️</span> 企业用工法律风险体检
+            </div>
+            <div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+                </div>
+                <div class="progress-text" id="progressText">0/110 题</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container" id="mainContainer">
+        <!-- Dynamic content rendered by JS -->
+    </div>
+
+    <!-- Submit Modal -->
+    <div class="modal-overlay" id="submitModal">
+        <div class="modal">
+            <div class="spinner"></div>
+            <h3>正在生成报告...</h3>
+            <p>正在根据您的回答匹配风险点并生成分析报告</p>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal">
+            <div style="font-size:64px;margin-bottom:16px;">✅</div>
+            <h3 style="color:#27ae60;">提交成功！</h3>
+            <p style="margin-top:12px;line-height:1.8;">感谢您的参与！<br>后续会有律师专门为您进行专业解析，敬请期待！</p>
+            <button class="btn btn-next" onclick="location.reload()" style="margin-top:20px;">完成</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== Survey Data =====
+        let surveyModules = [];
+        let currentStep = 0; // 0 = company info, 1-8 = modules
+        let answers = {};
+        let companyInfo = { name: '', contact: '' };
+        let totalQuestions = 0;
+
+        // Load survey structure
+        async function loadSurvey() {
+            try {
+                const resp = await fetch('/data/survey_structure.json');
+                surveyModules = await resp.json();
+                totalQuestions = surveyModules.reduce((sum, m) => sum + m.questions.length, 0);
+            } catch(e) {
+                console.error('Failed to load survey:', e);
+                document.getElementById('mainContainer').innerHTML = 
+                    '<div class="card" style="text-align:center;padding:60px;"><p>加载问卷失败，请刷新页面重试</p></div>';
+                return;
+            }
+
+            // Try restoring from localStorage
+            const saved = localStorage.getItem('survey_state');
+            if (saved) {
+                try {
+                    const state = JSON.parse(saved);
+                    answers = state.answers || {};
+                    companyInfo = state.companyInfo || { name: '', contact: '' };
+                    currentStep = state.currentStep || 0;
+                } catch(e) {}
+            }
+
+            renderStep();
+        }
+
+        function saveState() {
+            localStorage.setItem('survey_state', JSON.stringify({
+                answers, companyInfo, currentStep
+            }));
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let answeredCount = 0;
+            for (const key in answers) {
+                const v = answers[key];
+                if (Array.isArray(v) && v.length > 0) answeredCount++;
+                else if (v && !Array.isArray(v)) answeredCount++;
+            }
+            const pct = totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
+            document.getElementById('progressFill').style.width = pct + '%';
+            document.getElementById('progressText').textContent = `${answeredCount}/${totalQuestions} 题`;
+        }
+
+        function renderCompanyInfo() {
+            return `
+                <div class="card">
+                    <h2>📋 企业基本信息</h2>
+                    <p class="mod-desc">请填写以下信息，以便我们为您生成专属的法律风险分析报告</p>
+                    <div class="form-group">
+                        <label>企业名称 <span class="required-star">*</span></label>
+                        <input type="text" id="companyName" placeholder="请输入您的企业全称" value="${escHtml(companyInfo.name)}">
+                    </div>
+                    <div class="form-group">
+                        <label>联系人</label>
+                        <input type="text" id="contactPerson" placeholder="请输入联系人姓名" value="${escHtml(companyInfo.contact)}">
+                    </div>
+                    <div class="form-group">
+                        <label>联系电话</label>
+                        <input type="text" id="contactPhone" placeholder="请输入联系电话" value="${escHtml(companyInfo.phone || '')}">
+                    </div>
+                </div>`;
+        }
+
+        function renderModule(moduleData, modIndex) {
+            let html = `<div class="card"><h2>${moduleData.name}</h2>`;
+            html += `<p class="mod-desc">共 ${moduleData.questions.length} 题，请逐一作答</p>`;
+            
+            moduleData.questions.forEach((q, qi) => {
+                const globalIdx = modIndex * 100 + qi;
+                const id = q.id;
+                const val = answers[id] || (q.type === 'checkbox' ? [] : '');
+                const isMulti = q.type === 'checkbox';
+                
+                html += `<div class="question-item">`;
+                html += `<div class="question-text">`;
+                html += `<span class="question-num">${qi + 1}</span>`;
+                html += escHtml(q.text);
+                if (isMulti) html += `<span class="multi-badge">多选</span>`;
+                html += `</div>`;
+                html += `<div class="options-group">`;
+                
+                q.options.forEach(opt => {
+                    const optId = `opt_${modIndex}_${qi}_${opt.replace(/[^a-zA-Z0-9\u4e00-\u9fff]/g, '_').substring(0, 30)}`;
+                    const checked = isMulti ? val.includes(opt) : val === opt;
+                    const selectedClass = checked ? ' selected' : '';
+                    
+                    html += `<label class="option-item${selectedClass}" for="${optId}">`;
+                    html += `<input type="${isMulti ? 'checkbox' : 'radio'}" 
+                        name="q_${modIndex}_${qi}" 
+                        id="${optId}" 
+                        value="${escHtml(opt)}"
+                        ${checked ? 'checked' : ''}
+                        onchange="handleAnswer('${escAttr(id)}', '${escAttr(opt)}', ${isMulti}, ${modIndex}, ${qi}, ${globalIdx})">`;
+                    html += `<span class="option-indicator ${isMulti ? 'checkbox-indicator' : 'radio-indicator'}"></span>`;
+                    html += `<span>${escHtml(opt)}</span>`;
+                    html += `</label>`;
+                });
+                
+                html += `</div></div>`;
+            });
+            
+            html += `</div>`;
+            return html;
+        }
+
+        function renderStep() {
+            const container = document.getElementById('mainContainer');
+            const totalSteps = surveyModules.length + 1; // +1 for company info
+            
+            // Step navigation HTML
+            let navHtml = '<div class="step-nav">';
+            navHtml += `<div class="step-dot${currentStep === 0 ? ' active' : (currentStep > 0 ? ' done' : '')}" onclick="goToStep(0)" title="企业信息">`;
+            navHtml += `1<span class="step-label">企业信息</span></div>`;
+            surveyModules.forEach((mod, i) => {
+                let cls = '';
+                if (currentStep === i + 1) cls = ' active';
+                else if (currentStep > i + 1) cls = ' done';
+                navHtml += `<div class="step-dot${cls}" onclick="goToStep(${i + 1})" title="${mod.name}">`;
+                navHtml += `${i + 2}<span class="step-label">${mod.name.substring(0, 4)}</span></div>`;
+            });
+            navHtml += '</div>';
+            
+            // Content
+            let contentHtml = '';
+            if (currentStep === 0) {
+                contentHtml = renderCompanyInfo();
+            } else {
+                contentHtml = renderModule(surveyModules[currentStep - 1], currentStep - 1);
+            }
+            
+            // Buttons
+            let btnsHtml = '<div class="btn-row">';
+            if (currentStep > 0) {
+                btnsHtml += `<button class="btn btn-prev" onclick="prevStep()">← 上一步</button>`;
+            } else {
+                btnsHtml += `<div></div>`;
+            }
+            
+            if (currentStep < totalSteps - 1) {
+                btnsHtml += `<button class="btn btn-next" onclick="nextStep()">下一步 →</button>`;
+            } else {
+                const unanswered = countUnanswered();
+                btnsHtml += `<button class="btn btn-submit" ${unanswered > 0 ? '' : ''} onclick="submitSurvey()">📊 提交问卷 · 生成报告</button>`;
+                if (unanswered > 0) {
+                    btnsHtml += `</div><div style="text-align:right;margin-top:8px;color:#e67e22;font-size:13px;">⚠️ 还有 ${unanswered} 题未作答，建议完成后提交</div>`;
+                } else {
+                    btnsHtml += `</div>`;
+                }
+            }
+            
+            container.innerHTML = navHtml + contentHtml + btnsHtml;
+            
+            // Update progress
+            updateProgress();
+            saveState();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function countUnanswered() {
+            let count = 0;
+            surveyModules.forEach(mod => {
+                mod.questions.forEach(q => {
+                    const val = answers[q.id];
+                    if (!val || (Array.isArray(val) && val.length === 0)) count++;
+                });
+            });
+            return count;
+        }
+
+        function goToStep(step) {
+            // Save company info if on that step
+            if (currentStep === 0) {
+                saveCompanyInfo();
+            }
+            currentStep = step;
+            renderStep();
+        }
+
+        function prevStep() {
+            if (currentStep === 0) {
+                saveCompanyInfo();
+            }
+            if (currentStep > 0) {
+                currentStep--;
+                renderStep();
+            }
+        }
+
+        function nextStep() {
+            if (currentStep === 0) {
+                saveCompanyInfo();
+                if (!companyInfo.name.trim()) {
+                    alert('请填写企业名称');
+                    return;
+                }
+            }
+            currentStep++;
+            renderStep();
+        }
+
+        function saveCompanyInfo() {
+            companyInfo.name = document.getElementById('companyName')?.value || '';
+            companyInfo.contact = document.getElementById('contactPerson')?.value || '';
+            companyInfo.phone = document.getElementById('contactPhone')?.value || '';
+            saveState();
+        }
+
+        function handleAnswer(qid, opt, isMulti, modIndex, qi, globalIdx) {
+            if (isMulti) {
+                if (!answers[qid]) answers[qid] = [];
+                const idx = answers[qid].indexOf(opt);
+                if (idx >= 0) {
+                    answers[qid].splice(idx, 1);
+                } else {
+                    answers[qid].push(opt);
+                }
+            } else {
+                answers[qid] = opt;
+            }
+            
+            // Update visual selection
+            const optId = `opt_${modIndex}_${qi}_${opt.replace(/[^a-zA-Z0-9\u4e00-\u9fff]/g, '_').substring(0, 30)}`;
+            const name = `q_${modIndex}_${qi}`;
+            
+            if (!isMulti) {
+                document.querySelectorAll(`[name="${name}"]`).forEach(inp => {
+                    inp.closest('.option-item')?.classList.remove('selected');
+                });
+            }
+            const el = document.getElementById(optId);
+            if (el) {
+                const item = el.closest('.option-item');
+                if (item) {
+                    if (isMulti) {
+                        item.classList.toggle('selected', answers[qid].includes(opt));
+                    } else {
+                        item.classList.add('selected');
+                    }
+                }
+            }
+            
+            saveState();
+            updateProgress();
+        }
+
+        async function submitSurvey() {
+            if (currentStep === 0) {
+                saveCompanyInfo();
+            }
+            if (!companyInfo.name.trim()) {
+                alert('请先填写企业名称（第1步）');
+                goToStep(0);
+                return;
+            }
+
+            document.getElementById('submitModal').classList.add('show');
+
+            const payload = {
+                company_name: companyInfo.name,
+                contact: companyInfo.contact + (companyInfo.phone ? ` (${companyInfo.phone})` : ''),
+                answers: answers
+            };
+
+            try {
+                const resp = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await resp.json();
+                
+                document.getElementById('submitModal').classList.remove('show');
+                
+                if (result.success) {
+                    document.getElementById('successModal').classList.add('show');
+                    localStorage.removeItem('survey_state');
+                } else {
+                    alert('提交失败，请重试');
+                }
+            } catch(e) {
+                document.getElementById('submitModal').classList.remove('show');
+                alert('网络错误，请检查网络连接后重试');
+                console.error(e);
+            }
+        }
+
+        function escHtml(s) {
+            if (!s) return '';
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function escAttr(s) {
+            if (!s) return '';
+            return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        // Initialize
+        loadSurvey();
+    </script>
+</body>
+</html>

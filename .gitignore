@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# macOS
+.DS_Store
+
+# Generated output
+output/
+*.db
+
+# Backup files
+server_backup.py
+*_backup.py
+
+# Static deploy version (not needed for server)
+deploy/
+
+# IDE
+.vscode/
+.idea/
