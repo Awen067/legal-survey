@@ -30,10 +30,12 @@ RISK_LEVEL_2 = chr(0x2B50) * 2
 RISK_LEVEL_1 = chr(0x2B50)
 
 BASE_DIR = Path(__file__).parent
-DATA_DIR = BASE_DIR / "data"
-OUTPUT_DIR = BASE_DIR / "output"
+# Railway 持久化磁盘挂载在 /data，优先使用
+HAS_VOLUME = Path("/data").exists()
+DATA_DIR = BASE_DIR / "data"          # 风险库JSON始终在代码目录
+DB_PATH = Path("/data/surveys.db") if HAS_VOLUME else BASE_DIR / "surveys.db"
+OUTPUT_DIR = Path("/data/output") if HAS_VOLUME else BASE_DIR / "output"
 TEMPLATES_DIR = BASE_DIR / "templates"
-DB_PATH = BASE_DIR / "surveys.db"
 
 # 确保目录存在
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
