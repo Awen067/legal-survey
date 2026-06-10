@@ -17,6 +17,12 @@ server_backup.py
 # Static deploy version (not needed for server)
 deploy/
 
+# Railway detection: these files mislead Railway into detecting "shell" instead of "python"
+# Keep them locally (start.sh for local use), but exclude from git/Railway
+start.sh
+Procfile
+runtime.txt
+
 # IDE
 .vscode/
 .idea/

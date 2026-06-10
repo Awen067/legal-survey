@@ -1,0 +1,1 @@
+{"$schema": "https://railway.app/railpack.schema.json", "provider": "python", "pythonVersion": "3.12", "build": {"commands": []}, "run": {"command": "python3 server_db.py"}}
