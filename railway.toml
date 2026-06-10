@@ -1,6 +1,3 @@
-[project]
-builder = "nixpacks"
-
 [deploy]
 startCommand = "python3 server_db.py"
 healthcheckPath = "/health"
